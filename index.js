@@ -1,9 +1,45 @@
-const express = require("express");
+import fetch from "node-fetch";
+import dotenv from "dotenv";
+import express from "express";
+
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config();
+}
 
 const app = express();
 const PORT = 3000;
 
-console.log(process.env)
+app.get("/", (req, res) => {
+  res.json({ message: "Hello World" });
+});
+
+app.get("/mlb", async (req, res) => {
+  const url =
+    "https://api.themoviedb.org/3/movie/550?api_key=bae312498d3a8b81ad008ff536e8b737";
+
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: process.env.Authorization,
+      "Content-Type": process.env.Content_Type,
+    },
+  };
+
+  fetch(url, options)
+    .then((response) => response.json())
+    .then((json) => console.log(json))
+    .catch((error) => console.log("error" + error));
+
+  try {
+    let response = await fetch(url, options);
+    response = await response.json();
+    res.status(200).json(response);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `Internal Server Error.` });
+  }
+});
+
 app.listen(PORT, (error) => {
   if (!error)
     console.log(
