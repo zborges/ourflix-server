@@ -1,42 +1,31 @@
-import express from "express";
-import fetch from "node-fetch";
-import dotenv from "dotenv";
+const express = require("express");
+const fetch = require("node-fetch");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+
 if (process.env.NODE_ENV !== "production") {
-  dotenv.config();
+  require("dotenv").config();
 }
 
 const app = express();
 const PORT = 3000;
+app.use(express.json())
+
+const movies = require("./routes/movieRoutes.js");
+app.use("/movies", movies)
+
+const users = require("./routes/userRoutes.js");
+app.use("/users", users)
+
+mongoose.connect(process.env.MONGODB_URI).then(() => {
+  console.log("Connected to Database Successfully");
+});
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   res.json({ message: "Hello World" });
-});
-
-app.get("/movies/:id", async (req, res) => {
-  const id = req.params.id;
-  const url = `https://api.themoviedb.org/3/movie/${id}?api_key=bae312498d3a8b81ad008ff536e8b737`;
-
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: process.env.Authorization,
-      "Content-Type": process.env.Content_Type,
-    },
-  };
-
-  fetch(url, options)
-    .then((response) => response.json())
-    .then((json) => console.log(json))
-    .catch((error) => console.log("error" + error));
-
-  try {
-    let response = await fetch(url, options);
-    response = await response.json();
-    res.status(200).json(response);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ msg: `Internal Server Error.` });
-  }
 });
 
 app.listen(PORT, (error) => {
