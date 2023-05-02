@@ -1,7 +1,6 @@
+import express from "express";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
-import express from "express";
-
 if (process.env.NODE_ENV !== "production") {
   dotenv.config();
 }
@@ -13,9 +12,9 @@ app.get("/", (req, res) => {
   res.json({ message: "Hello World" });
 });
 
-app.get("/mlb", async (req, res) => {
-  const url =
-    "https://api.themoviedb.org/3/movie/550?api_key=bae312498d3a8b81ad008ff536e8b737";
+app.get("/movies/:id", async (req, res) => {
+  const id = req.params.id;
+  const url = `https://api.themoviedb.org/3/movie/${id}?api_key=bae312498d3a8b81ad008ff536e8b737`;
 
   const options = {
     method: "GET",
