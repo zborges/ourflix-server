@@ -24,8 +24,8 @@ mongoose.connect(process.env.MONGODB_URI).then(() => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.json({ message: "Hello World" });
+app.get("/test", (req, res) => {
+  res.json({ message: "Welcome to the home page!" });
 });
 
 app.listen(PORT, (error) => {
