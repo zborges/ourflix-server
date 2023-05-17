@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 
 const router = express.Router();
 
-router.post("/sign-up", async (req, res) => {
+router.post("/register", async (req, res) => {
   try {
     const { email, password } = req.body;
     let userExists = await User.findOne({ email });
@@ -36,14 +36,18 @@ router.post("/sign-in", async (req, res) => {
     const user = await User.findOne({ email });
     const accessToken = jwt.sign(
       JSON.stringify(user.email),
-      process.env.TOKEN_SECRET,
+      process.env.TOKEN_SECRET
     );
     if (!user) {
       return res.status(401).json({ message: "Invalid Credentials" });
     }
     bcrypt.compare(password, user.password, (err, result) => {
       if (result) {
-        return res.status(200).json({ accessToken: accessToken });
+        return res.status(200).json({
+          message: `Welcome back ${email}!`,
+          email: email,
+          accessToken: accessToken,
+        });
       }
       console.log(err);
       return res.status(401).json({ message: "Invalid Credentials" });
