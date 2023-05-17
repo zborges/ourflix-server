@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/register", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
     let userExists = await User.findOne({ email });
     if (userExists) {
       res.status(401).json({ message: " Email is already in use." });
@@ -18,6 +18,8 @@ router.post("/register", async (req, res) => {
     bcrypt.hash(password, saltRounds, (err, hash) => {
       if (err) throw new Error("Internal Server Error");
       let user = new User({
+        firstName,
+        lastName,
         email,
         password: hash,
       });

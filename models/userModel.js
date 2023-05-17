@@ -2,6 +2,26 @@ const mongoose = require("mongoose");
 const { isEmail } = require("validator");
 
 const userSchema = mongoose.Schema({
+  firstName: {
+    type: String,
+    required: [true, "First name is required"],
+    validate: {
+      validator: function (value){
+        return value.length >= 2;
+      },
+      message: () => "First name is required",
+    },
+  },
+  lastName: {
+    type: String,
+    required: [true, "Last name is required"],
+    validate: {
+      validator: function (value){
+        return value.length >= 2;
+      },
+      message: () => `Last name is required`,
+    },
+  },
   email: {
     type: String,
     required: [true, "Email is required"],

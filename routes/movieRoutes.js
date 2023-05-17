@@ -29,4 +29,31 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  const id = req.params.id;
+  const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc`
+
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: process.env.Authorization,
+      "Content-Type": process.env.Content_Type,
+    },
+  };
+
+  fetch(url, options)
+    .then((response) => response.json())
+    .then((json) => console.log(json))
+    .catch((error) => console.log("error" + error));
+
+  try {
+    let response = await fetch(url, options);
+    response = await response.json();
+    res.status(200).json(response);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: `Internal Server Error.` });
+  }
+});
+
 module.exports = router;
