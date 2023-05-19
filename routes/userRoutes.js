@@ -46,8 +46,8 @@ router.post("/sign-in", async (req, res) => {
     bcrypt.compare(password, user.password, (err, result) => {
       if (result) {
         return res.status(200).json({
-          message: `Welcome back ${email}!`,
-          email: email,
+          user: user,
+          message: `Welcome back ${user.firstName}!`,
           accessToken: accessToken,
         });
       }
@@ -55,7 +55,7 @@ router.post("/sign-in", async (req, res) => {
       return res.status(401).json({ message: "Invalid Credentials" });
     });
   } catch (error) {
-    res.status(401).send(error.message);
+    res.status(401).json({ message: error.message });
   }
 });
 
