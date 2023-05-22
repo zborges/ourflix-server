@@ -4,6 +4,7 @@ const fetch = require("node-fetch");
 const Movie = require("../models/movieModel");
 const userModel = require("../models/userModel");
 
+//get movie by id
 router.get("/:id", async (req, res) => {
   const id = req.params.id;
   const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.MOVIEDB_API_KEY}`;
@@ -31,6 +32,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// get list of movies
 router.get("/", async (req, res) => {
   const id = req.params.id;
   const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc`;
@@ -58,6 +60,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// add movie to list
 router.post("/", async (req, res) => {
   const { movie } = req.body;
 

@@ -59,4 +59,15 @@ router.post("/sign-in", async (req, res) => {
   }
 });
 
+// get user info
+router.get("/:id", async (req, res) => {
+  const id = req.params.id;
+  const user = await User.findById(id).populate("movies", "title overview");
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  } else {
+    return res.status(200).json({ user });
+  }
+});
+
 module.exports = router;
