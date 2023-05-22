@@ -40,5 +40,11 @@ const userSchema = mongoose.Schema({
       message: () => "Password must be at least six characters long",
     },
   },
+  movies: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Movie"
+    }
+  ]
 });
 module.exports = mongoose.model("User", userSchema);
