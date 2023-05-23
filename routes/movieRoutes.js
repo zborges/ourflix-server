@@ -3,7 +3,9 @@ const router = express.Router();
 const fetch = require("node-fetch");
 const Movie = require("../models/movieModel");
 const userModel = require("../models/userModel");
+const mongoose = require("mongoose");
 
+const db = mongoose.connection;
 //get movie by id
 router.get("/:id", async (req, res) => {
   const id = req.params.id;
@@ -64,8 +66,10 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   const { movie } = req.body;
 
-  if (!movie || Movie.findOne({ movieId: movie.movieId })) {
-    return res.status(400).json({ message: "Movie already exists" });
+  if (!movie || (await Movie.findOne({ movieId: movie.movieId }))) {
+    return res
+      .status(400)
+      .json({ message: "Movie already exists", movieId: movie.movieId });
   } else {
     const newMovie = await Movie.create(movie);
     await userModel.updateMany(

@@ -1,5 +1,4 @@
 const express = require("express");
-const fetch = require("node-fetch");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 

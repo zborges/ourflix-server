@@ -35,7 +35,10 @@ router.post("/register", async (req, res) => {
 router.post("/sign-in", async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate(
+      "movies",
+      "title overview"
+    );
     const accessToken = jwt.sign(
       JSON.stringify(user.email),
       process.env.TOKEN_SECRET
