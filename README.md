@@ -1,6 +1,6 @@
 ## Ourflix Server
 
-This is an React/Express project that allows users to create an account, see a list of movies and add them to their account. 
+This is a MERN (MongoDB/Express/React/Node) project that allows users to create an account, see a list of movies and add them to their account. 
 
 ## Motivation
 
