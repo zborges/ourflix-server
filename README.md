@@ -12,7 +12,7 @@ This project was created to utilize my Node/Express skills to show to employers 
 <b>Built with</b>
 
 - [React](https://reactjs.org/)
-- [Express]((https://expressjs.com/)
+- [Express](https://expressjs.com/)
 - [Tailwind](https://tailwindcss.com/)
 - [MongoDB/Mongoose](https://mongoosejs.com/docs/)
 
