@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const fetch = require("node-fetch");
 const Movie = require("../models/movieModel");
-const userModel = require("../models/userModel");
+const User = require("../models/userModel");
 const mongoose = require("mongoose");
 
 const db = mongoose.connection;
@@ -66,7 +66,7 @@ router.get("/", async (req, res) => {
 const doesMovieExist = async (req) => {
   try {
     const searchedMovie = await Movie.findOne({ movieId: req.movieId });
-
+    console.log("searchedMovie", searchedMovie);
     if (searchedMovie == null) {
       console.log("searchedMovie IS null");
       return false;
@@ -102,6 +102,26 @@ const doesUserExist = async (req) => {
     return false;
   }
 };
+// WILL REFACTOR THIS LATER
+const addMovieToUser = async (userId, movie) => {
+  const searchedMovie = await Movie.findOne({ movieId: movie.movieId });
+  const searchedUser = await User.findOne({ _id: userId });
+  return User.findByIdAndUpdate(
+    searchedUser._id,
+    { $push: { movies: searchedMovie._id } },
+    { new: true, useFindAndModify: false }
+  );
+};
+
+const addUserToMovie = async (userId, movie) => {
+  const searchedMovie = await Movie.findOne({ movieId: movie.movieId });
+  const searchedUser = await User.findOne({ _id: userId });
+  return Movie.findByIdAndUpdate(
+    searchedMovie._id,
+    { $push: { users: searchedUser._id } },
+    { new: true, useFindAndModify: false }
+  );
+};
 // need to have function that checks if user exists in the userArray of the movie
 // if user exists, then don't add movie to list
 // if user does not exist, then add movie to users list
@@ -109,13 +129,9 @@ const doesUserExist = async (req) => {
 // add movie to list
 router.post("/", async (req, res) => {
   const { movie } = req.body;
-  console.log("movie", movie);
   // check to see if movie exists in database.
   if (await doesMovieExist(movie)) {
     // If it does, check to see if user exists in the userArray of the movie
-    // if User does not exist, add user to userArray of movie
-    // if User does exist, do not add user to userArray of movie
-
     if ((await doesUserExist(movie)) == true) {
       console.log("User already has movie saved.");
       return res.status(400).json({
@@ -125,28 +141,23 @@ router.post("/", async (req, res) => {
     } else {
       console.log("User does not have movie saved.");
       const searchedMovie = await Movie.findOne({ movieId: movie.movieId });
-      console.log("searchedMovie", searchedMovie);
-
-      // need to add user to userArray of movie as well as add movie to user's movie list
+      addMovieToUser(req.body.user.id, movie);
+      addUserToMovie(req.body.user.id, movie);
 
       return res
         .status(201)
         .json({ message: "Movie would be added to User's profile" });
     }
-    //###
   } else {
     const newMovie = await Movie.create(movie);
-    await userModel.updateMany(
+    await User.updateMany(
       { _id: { $in: newMovie.users } },
       { $push: { movies: newMovie._id } }
     );
     console.log("New movie would be created here.");
-    return (
-      res
-        .status(201)
-        // .json({ message: "Movie created successfully", newMovie });
-        .json({ message: "Movie created successfully" })
-    );
+    return res
+      .status(201)
+      .json({ message: "Movie created successfully", newMovie });
   }
 });
 
