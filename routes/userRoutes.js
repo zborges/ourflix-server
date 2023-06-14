@@ -37,7 +37,7 @@ router.post("/sign-in", async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email }).populate(
       "movies",
-      "title overview"
+      "title overview image"
     );
     const accessToken = jwt.sign(
       JSON.stringify(user.email),
@@ -65,7 +65,7 @@ router.post("/sign-in", async (req, res) => {
 // get user info
 router.get("/:id", async (req, res) => {
   const id = req.params.id;
-  const user = await User.findById(id).populate("movies", "title overview");
+  const user = await User.findById(id).populate("movies", "title overview image");
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   } else {
