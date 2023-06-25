@@ -145,7 +145,7 @@ router.post("/", async (req, res) => {
 
     return res
       .status(201)
-      .json({ message: "Movie created successfully", newMovie });
+      .json({ message: "Movie added successfully!", newMovie });
   }
 });
 
